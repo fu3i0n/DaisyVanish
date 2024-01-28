@@ -7,6 +7,11 @@ import me.quantiom.advancedvanish.event.PlayerVanishEvent
 import me.quantiom.advancedvanish.hook.IHook
 import me.quantiom.advancedvanish.util.AdvancedVanishAPI
 import me.quantiom.advancedvanish.util.color
+import me.quantiom.advancedvanish.util.colorLegacy
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer
+import net.md_5.bungee.api.ChatColor
+import net.md_5.bungee.api.ChatMessageType
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -35,7 +40,9 @@ class ActionBarHook : IHook {
     }
 
     private fun sendActionBarStr(player: Player, str: String) {
-        AdvancedVanish.adventure?.player(player)?.sendActionBar(str.color())
+        //        AdvancedVanish.adventure?.player(player)?.sendActionBar(str.color())
+        val text = ChatColor.translateAlternateColorCodes('&', str.color().colorLegacy())
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacy(text))
     }
 
     @EventHandler
