@@ -1,6 +1,5 @@
 package me.quantiom.advancedvanish.util
 
-import me.quantiom.advancedvanish.AdvancedVanish
 import me.quantiom.advancedvanish.config.Config
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -31,7 +30,7 @@ fun Component.colorLegacy(): String {
 
 fun CommandSender.sendConfigMessage(key: String) = Config.sendMessage(this, key)
 fun CommandSender.sendConfigMessage(key: String, vararg pairs: Pair<String, String>) = Config.sendMessage(this, key, *pairs)
-fun CommandSender.sendComponentMessage(msg: Component) = AdvancedVanish.adventure!!.sender(this).sendMessage(msg)
+fun CommandSender.sendComponentMessage(msg: Component) = this.sendMessage(msg)
 
-fun Player.sendComponentMessage(msg: Component) = AdvancedVanish.adventure!!.player(this).sendMessage(msg)
+fun Player.sendComponentMessage(msg: Component) = this.sendMessage(msg)
 fun Player.sendColoredMessage(msg: String) = this.sendComponentMessage(msg.color())

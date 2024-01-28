@@ -44,19 +44,6 @@ public final class DependencyManager {
                 this.getLibrary("redis{}clients", "jedis", "4.2.0", "", ""),
                 this.getLibrary("org{}apache{}commons", "commons-pool2", "2.11.1", "", ""),
                 this.getLibrary("org{}json", "json", "20211205", "", ""),
-                // adventure
-                this.getLibrary("net{}kyori", "adventure-api", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-platform-api", "4.1.2", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-platform-bukkit", "4.1.2", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-platform-facet", "4.1.2", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-text-serializer-bungeecord", "4.1.2", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-text-serializer-legacy", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-nbt", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-text-serializer-gson", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-text-serializer-gson-legacy-impl", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-platform-viaversion", "4.1.2", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-key", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
-                this.getLibrary("net{}kyori", "adventure-text-minimessage", "4.11.0", "net{}kyori{}adventure", "me{}quantiom{}advancedvanish{}shaded{}adventure"),
                 // kotlin
                 this.getLibrary("org{}jetbrains{}" + kotlinStr, kotlinStr + "-stdlib", "1.7.10", kotlinStr, "me.quantiom.advancedvanish.shaded.kotlin")
         );
