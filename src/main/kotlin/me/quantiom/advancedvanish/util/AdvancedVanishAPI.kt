@@ -38,7 +38,7 @@ object AdvancedVanishAPI {
         if (prePlayerVanishEvent.isCancelled) return
 
         this.vanishedPlayers.add(player.uniqueId)
-        
+
         // add vanished metadata to player for other plugins to use
         player.setMetadata("vanished", FixedMetadataValue(AdvancedVanish.instance!!, true))
 

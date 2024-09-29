@@ -5,7 +5,7 @@
 
     <groupId>me.quantiom</groupId>
     <artifactId>advancedvanish</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
     <packaging>jar</packaging>
 
     <name>AdvancedVanish</name>
@@ -59,6 +59,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+            <repository>
+                <id>rwd-repo</id>
+                <url>https://repo.rosewooddev.io/repository/public/</url>
+            </repository>
         <repository>
             <id>Scarsz-Nexus</id>
             <url>https://nexus.scarsz.me/content/groups/public/</url>
@@ -84,22 +88,10 @@
             <version>${kotlin.version}</version>
             <scope>provided</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.spigotmc</groupId>-->
-<!--            <artifactId>spigot-api</artifactId>-->
-<!--            <version>1.8.8-R0.1-SNAPSHOT</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.spigotmc</groupId>-->
-<!--            <artifactId>spigot-api</artifactId>-->
-<!--            <version>1.20.4-R0.1-SNAPSHOT</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.20.4-R0.1-SNAPSHOT</version>
+            <version>1.21.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -123,7 +115,7 @@
         <dependency>
             <groupId>com.comphenix.protocol</groupId>
             <artifactId>ProtocolLib</artifactId>
-            <version>5.1.0</version>
+            <version>5.3.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -138,12 +130,6 @@
             <version>56f35c93b5</version>
             <scope>provided</scope>
         </dependency>
-        <!--<dependency>
-            <groupId>ru.tehkode</groupId>
-            <artifactId>PermissionsEx</artifactId>
-            <version>1.23.4</version>
-            <scope>provided</scope>
-        </dependency>-->
         <dependency>
             <groupId>com.github.ElgarL</groupId>
             <artifactId>groupmanager</artifactId>
@@ -165,43 +151,49 @@
         <dependency>
             <groupId>com.discordsrv</groupId>
             <artifactId>discordsrv</artifactId>
-            <version>1.28.0-SNAPSHOT</version>
+            <version>1.28.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>us.dynmap</groupId>
+            <artifactId>DynmapCoreAPI</artifactId>
+            <version>3.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>us.dynmap</groupId>
             <artifactId>dynmap-api</artifactId>
-            <version>3.4-beta-3</version>
+            <version>3.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>xyz.jpenilla</groupId>
             <artifactId>squaremap-api</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.7</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.libraryaddict</groupId>
+            <groupId>LibsDisguises</groupId>
             <artifactId>LibsDisguises</artifactId>
-            <version>10.0.19</version>
+            <version>10.0.44</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>dev.esophose</groupId>
             <artifactId>playerparticles</artifactId>
-            <version>7.4</version>
+            <version>8.6</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.exposed</groupId>
             <artifactId>exposed-core</artifactId>
-            <version>0.39.2</version>
+            <version>0.55.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -301,6 +293,17 @@
                         <id>java-compile</id>
                         <phase>compile</phase>
                         <goals> <goal>compile</goal> </goals>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -15,7 +15,7 @@ import java.util.logging.Level
 
 object ServerSyncManager : Listener {
     var crossServerSupportEnabled: Boolean = false
-    var serverSyncStoreImpl: IServerSyncStore? = null
+    private var serverSyncStoreImpl: IServerSyncStore? = null
 
     var loginVanishStates: MutableMap<UUID, Boolean> = Maps.newHashMap()
 

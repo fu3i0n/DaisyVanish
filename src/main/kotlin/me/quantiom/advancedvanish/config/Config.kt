@@ -37,7 +37,7 @@ object Config {
         var inputStream: InputStream? = null
 
         try {
-            inputStream = resource.buffered()
+            inputStream = resource?.buffered()
             p.load(inputStream)
         } catch (e: IOException) {
             e.printStackTrace()

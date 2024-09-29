@@ -226,7 +226,7 @@ object VanishListener : Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.HIGHEST)
     private fun onDamage(event: EntityDamageByEntityEvent) {
         (event.damager as? Player)?.let { damager ->
             if (damager.isVanished() && !Config.getValueOrDefault("when-vanished.attack-entities", false) && !VanishStateManager.canInteract(damager)) {

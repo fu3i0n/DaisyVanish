@@ -210,7 +210,7 @@ messages:
   vanish-set-other-command-already: "<red>%target-name%<white> is already <red>%vanish-status-word%"
   must-be-vanished-to-use-command: "<red>You must be vanished to use this command."
   # Placeholders:
-  #   %interact-status%" - "on" or "off"
+  #   %interact-status% - "on" or "off"
   vanish-interact-toggled: "<white>You have turned %interact-status% interacting while vanished."
   action-bar: "<red>You are in vanish."
   disguise-removed-because-vanish: "Your disguise has been <red>removed<white> because you are in vanish"

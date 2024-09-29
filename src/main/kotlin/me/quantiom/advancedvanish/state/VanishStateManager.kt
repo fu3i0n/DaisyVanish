@@ -6,7 +6,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import me.quantiom.advancedvanish.AdvancedVanish
 import me.quantiom.advancedvanish.config.Config
-import me.quantiom.advancedvanish.util.AdvancedVanishAPI
 import me.quantiom.advancedvanish.util.isVanished
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
