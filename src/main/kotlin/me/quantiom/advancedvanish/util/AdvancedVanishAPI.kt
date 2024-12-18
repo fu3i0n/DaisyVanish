@@ -83,10 +83,13 @@ object AdvancedVanishAPI {
         Bukkit.getOnlinePlayers()
             .filter { it.uniqueId != player.uniqueId }
             .forEach {
-                if (usePriority && it.hasPermission(Config.getValueOrDefault(
-                        "permissions.vanish",
-                        "advancedvanish.vanish"
-                    ))) {
+                if (usePriority && it.hasPermission(
+                        Config.getValueOrDefault(
+                            "permissions.vanish",
+                            "advancedvanish.vanish"
+                        )
+                    )
+                ) {
                     val pPriority = PermissionsManager.handler!!.getVanishPriority(it)
 
                     if (pPriority < playerPriority!!) {
@@ -153,8 +156,14 @@ object AdvancedVanishAPI {
             }
 
         // ignore if they are in spectator mode (allowed to fly by default)
-        if (player.gameMode != GameMode.SPECTATOR && !player.hasPermission(Config.getValueOrDefault("permissions.keep-fly-on-unvanish", "advancedvanish.keep-fly"))
-            && !Config.getValueOrDefault("advancedvanish.fly.keep-on-unvanish", false)) {
+        if (player.gameMode != GameMode.SPECTATOR && !player.hasPermission(
+                Config.getValueOrDefault(
+                    "permissions.keep-fly-on-unvanish",
+                    "advancedvanish.keep-fly"
+                )
+            )
+            && !Config.getValueOrDefault("advancedvanish.fly.keep-on-unvanish", false)
+        ) {
             player.isFlying = false
             player.allowFlight = false
         }
@@ -199,13 +208,18 @@ object AdvancedVanishAPI {
     fun canSee(player: Player, target: Player): Boolean {
         if (!target.isVanished()) return false
 
-        if (!player.hasPermission(Config.getValueOrDefault(
-                "permissions.vanish",
-                "advancedvanish.vanish"
-            ))) return false
+        if (!player.hasPermission(
+                Config.getValueOrDefault(
+                    "permissions.vanish",
+                    "advancedvanish.vanish"
+                )
+            )
+        ) return false
 
         if (!Config.usingPriorities) return true
 
-        return PermissionsManager.handler!!.getVanishPriority(player) >= PermissionsManager.handler!!.getVanishPriority(target)
+        return PermissionsManager.handler!!.getVanishPriority(player) >= PermissionsManager.handler!!.getVanishPriority(
+            target
+        )
     }
 }
