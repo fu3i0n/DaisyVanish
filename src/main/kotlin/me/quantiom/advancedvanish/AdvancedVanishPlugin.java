@@ -7,7 +7,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * This class is written in Java only because of the
  * dependency management system. After Kotlin is loaded, the
  * AdvancedVanish Kotlin class will take over.
- *
+ * <p>
  * Basically, this class just acts as a "loader".
  */
 
