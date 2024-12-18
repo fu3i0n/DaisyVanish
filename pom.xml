@@ -126,9 +126,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.rymate1234.bPermissions</groupId>
-            <artifactId>bPermissions-API</artifactId>
-            <version>56f35c93b5</version>
+            <groupId>com.github.jmurth1234</groupId>
+            <artifactId>bPermissions</artifactId>
+            <version>1bea2d432d</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
