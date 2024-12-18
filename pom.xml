@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.quantiom</groupId>
     <artifactId>advancedvanish</artifactId>
-    <version>1.2.7</version>
+    <version>1.2.8</version>
     <packaging>jar</packaging>
 
     <name>AdvancedVanish</name>
@@ -59,10 +60,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
-            <repository>
-                <id>rwd-repo</id>
-                <url>https://repo.rosewooddev.io/repository/public/</url>
-            </repository>
+        <repository>
+            <id>rwd-repo</id>
+            <url>https://repo.rosewooddev.io/repository/public/</url>
+        </repository>
         <repository>
             <id>Scarsz-Nexus</id>
             <url>https://nexus.scarsz.me/content/groups/public/</url>
@@ -91,7 +92,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.21.1-R0.1-SNAPSHOT</version>
+            <version>1.21.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -232,7 +233,9 @@
                 <executions>
                     <execution>
                         <id>compile</id>
-                        <goals> <goal>compile</goal> </goals>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                         <configuration>
                             <sourceDirs>
                                 <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
@@ -292,7 +295,9 @@
                     <execution>
                         <id>java-compile</id>
                         <phase>compile</phase>
-                        <goals> <goal>compile</goal> </goals>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
                     </execution>
                     <execution>
                         <id>default-testCompile</id>
@@ -312,7 +317,8 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.6.0</version>
                 <configuration>
-                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                    <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml
+                    </dependencyReducedPomLocation>
                     <relocations>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
