@@ -17,8 +17,8 @@ fun String.applyPlaceholders(vararg pairs: Pair<String, String>): String {
     return intermediate
 }
 
-fun List<String>.applyPlaceholders(vararg pairs: Pair<String, String>): List<String>
-        = this.map { it.applyPlaceholders(*pairs) }
+fun List<String>.applyPlaceholders(vararg pairs: Pair<String, String>): List<String> =
+    this.map { it.applyPlaceholders(*pairs) }
 
 fun String.color(): Component {
     return MiniMessage.miniMessage().deserialize(this)
@@ -29,7 +29,9 @@ fun Component.colorLegacy(): String {
 }
 
 fun CommandSender.sendConfigMessage(key: String) = Config.sendMessage(this, key)
-fun CommandSender.sendConfigMessage(key: String, vararg pairs: Pair<String, String>) = Config.sendMessage(this, key, *pairs)
+fun CommandSender.sendConfigMessage(key: String, vararg pairs: Pair<String, String>) =
+    Config.sendMessage(this, key, *pairs)
+
 fun CommandSender.sendComponentMessage(msg: Component) = this.sendMessage(msg)
 
 fun Player.sendComponentMessage(msg: Component) = this.sendMessage(msg)
