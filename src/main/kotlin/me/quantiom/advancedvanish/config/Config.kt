@@ -6,8 +6,8 @@ import co.aikar.locales.MessageKeyProvider
 import com.google.common.collect.Maps
 import com.google.common.io.Closeables
 import me.quantiom.advancedvanish.AdvancedVanish
-import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.state.VanishStateManager
+import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.util.applyPlaceholders
 import me.quantiom.advancedvanish.util.color
 import me.quantiom.advancedvanish.util.colorLegacy
@@ -66,7 +66,10 @@ object Config {
         if (currentConfigVersion != CONFIG_VERSION) {
             File(AdvancedVanish.instance!!.dataFolder.toString() + File.separator, "config.yml").also {
                 if (it.exists()) {
-                    val backupFile = File(AdvancedVanish.instance!!.dataFolder.toString() + File.separator, "config-backup-${System.currentTimeMillis()}.yml")
+                    val backupFile = File(
+                        AdvancedVanish.instance!!.dataFolder.toString() + File.separator,
+                        "config-backup-${System.currentTimeMillis()}.yml"
+                    )
                     it.copyTo(backupFile)
                     it.delete()
                     AdvancedVanish.instance!!.saveDefaultConfig()
@@ -81,7 +84,10 @@ object Config {
                         }
 
                         if (currentConfigVersion < 8) {
-                            AdvancedVanish.log(Level.INFO, "Config messages have been updated to use the MiniMessage formatting. Please check your config.yml for more information.")
+                            AdvancedVanish.log(
+                                Level.INFO,
+                                "Config messages have been updated to use the MiniMessage formatting. Please check your config.yml for more information."
+                            )
                         }
 
                         (plugin.config as YamlConfiguration).options().width(120)
@@ -91,7 +97,10 @@ object Config {
                 }
             }
 
-            AdvancedVanish.log(Level.INFO, "Config version mismatch (most likely because of an update), a backup of the old config has been made and the current config has been replaced.")
+            AdvancedVanish.log(
+                Level.INFO,
+                "Config version mismatch (most likely because of an update), a backup of the old config has been made and the current config has been replaced."
+            )
             this.reload()
             return
         }
@@ -103,7 +112,13 @@ object Config {
         this.usingPriorities = this.getValueOrDefault("priority.enable", false)
     }
 
-    private fun checkKeys(oldVersion: Int, newVersion: Int, newYamlConfig: FileConfiguration, oldYamlConfig: YamlConfiguration, currKey: String) {
+    private fun checkKeys(
+        oldVersion: Int,
+        newVersion: Int,
+        newYamlConfig: FileConfiguration,
+        oldYamlConfig: YamlConfiguration,
+        currKey: String
+    ) {
         if (currKey == "config-version") return
 
         if (oldYamlConfig.isConfigurationSection(currKey)) {
@@ -111,10 +126,19 @@ object Config {
                 checkKeys(oldVersion, newVersion, newYamlConfig, oldYamlConfig, "${currKey}.${key}")
             }
         } else {
-            if (newYamlConfig.contains(currKey) && oldYamlConfig.contains(currKey) && newYamlConfig.get(currKey)!!::class == oldYamlConfig.get(currKey)!!::class) {
+            if (newYamlConfig.contains(currKey) && oldYamlConfig.contains(currKey) && newYamlConfig.get(currKey)!!::class == oldYamlConfig.get(
+                    currKey
+                )!!::class
+            ) {
                 // update formatting to use MiniMessage
                 if (newYamlConfig.get(currKey)!! is String && oldVersion < 8) {
-                    newYamlConfig.set(currKey, MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacyAmpersand().deserialize(oldYamlConfig.get(currKey) as String)))
+                    newYamlConfig.set(
+                        currKey,
+                        MiniMessage.miniMessage().serialize(
+                            LegacyComponentSerializer.legacyAmpersand()
+                                .deserialize(oldYamlConfig.get(currKey) as String)
+                        )
+                    )
                 } else {
                     newYamlConfig.set(currKey, oldYamlConfig.get(currKey))
                 }
@@ -163,7 +187,8 @@ object Config {
             prefix = this.getValueOrDefault("messages.prefix.value", "<red>[AdvancedVanish]<white> ")
         }
 
-        this.getMessage(key).filter { it.isNotEmpty() }.forEach { player.sendComponentMessage(prefix.color().append(it.color())) }
+        this.getMessage(key).filter { it.isNotEmpty() }
+            .forEach { player.sendComponentMessage(prefix.color().append(it.color())) }
     }
 
     fun sendMessage(sender: CommandSender, key: String, vararg pairs: Pair<String, String>) {
@@ -173,7 +198,8 @@ object Config {
             prefix = this.getValueOrDefault("messages.prefix.value", "<red>[AdvancedVanish]<white> ").color()
         }
 
-        this.getMessage(key, *pairs).filter { it.isNotEmpty() }.forEach { sender.sendComponentMessage(prefix.append(it.color())) }
+        this.getMessage(key, *pairs).filter { it.isNotEmpty() }
+            .forEach { sender.sendComponentMessage(prefix.append(it.color())) }
     }
 
     private fun reloadMessages() {
@@ -201,11 +227,12 @@ object Config {
             }
         }
 
-        val prefix = if (this.savedConfig?.getConfigurationSection("command-handler-messages")?.getBoolean("use-prefix")!!) {
-            this.getValueOrDefault("messages.prefix.value", "<red>[AdvancedVanish]<white> ")
-        } else {
-            ""
-        }
+        val prefix =
+            if (this.savedConfig?.getConfigurationSection("command-handler-messages")?.getBoolean("use-prefix")!!) {
+                this.getValueOrDefault("messages.prefix.value", "<red>[AdvancedVanish]<white> ")
+            } else {
+                ""
+            }
 
         val getOrDefault: (String, String) -> String = { key, default ->
             prefix + if (commandHandlerMessages.containsKey(key)) commandHandlerMessages[key]!! else default
@@ -223,12 +250,14 @@ object Config {
             )
             .color().colorLegacy()
 
-        messages[MessageKeys.ERROR_PERFORMING_COMMAND] = getOrDefault("error-performing-command", "There was an error performing this command.")
-            .color().colorLegacy()
+        messages[MessageKeys.ERROR_PERFORMING_COMMAND] =
+            getOrDefault("error-performing-command", "There was an error performing this command.")
+                .color().colorLegacy()
 
-        messages[MessageKeys.COULD_NOT_FIND_PLAYER] = getOrDefault("could-not-find-player", "Couldn't find a player by the name of <red>%search%<white>.")
-            .applyPlaceholders("%search%" to "{search}")
-            .color().colorLegacy()
+        messages[MessageKeys.COULD_NOT_FIND_PLAYER] =
+            getOrDefault("could-not-find-player", "Couldn't find a player by the name of <red>%search%<white>.")
+                .applyPlaceholders("%search%" to "{search}")
+                .color().colorLegacy()
 
         messages[MessageKeys.ERROR_PREFIX] = getOrDefault("generic-error", "Error: <red>%error%")
             .applyPlaceholders("%error%" to "{message}")
