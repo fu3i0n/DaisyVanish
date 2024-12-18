@@ -11,7 +11,8 @@ import org.bukkit.entity.Player
 
 class PlaceHolderApiHook : IHook {
     private val isVanishedPlaceholder = Config.getValueOrDefault("placeholders.is-vanished", "is_vanished")
-    private val vanishedPlayersPlaceholder = Config.getValueOrDefault("placeholders.vanished-players", "vanished_players")
+    private val vanishedPlayersPlaceholder =
+        Config.getValueOrDefault("placeholders.vanished-players", "vanished_players")
     private val playerCountPlaceholder = Config.getValueOrDefault("placeholders.player-count", "player_count")
 
     private val expansion: PlaceholderExpansion = object : PlaceholderExpansion() {
@@ -25,10 +26,11 @@ class PlaceHolderApiHook : IHook {
             return when (params.lowercase()) {
                 isVanishedPlaceholder -> if (player?.isVanished() == true) "Yes" else "No"
                 vanishedPlayersPlaceholder -> AdvancedVanishAPI.vanishedPlayers
-                        .map(Bukkit::getPlayer)
-                        .map { it!! }
-                        .joinToString(", ", transform = Player::getName)
-                        .ifEmpty { "None" }
+                    .map(Bukkit::getPlayer)
+                    .map { it!! }
+                    .joinToString(", ", transform = Player::getName)
+                    .ifEmpty { "None" }
+
                 playerCountPlaceholder -> (Bukkit.getOnlinePlayers().size - AdvancedVanishAPI.vanishedPlayers.size).toString()
                 else -> null
             }
