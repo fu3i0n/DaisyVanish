@@ -1,4 +1,5 @@
 @file:JvmName("PrePlayerVanishEvent")
+
 package me.quantiom.advancedvanish.event
 
 import org.bukkit.entity.Player
@@ -18,6 +19,9 @@ class PrePlayerVanishEvent(val player: Player, val onJoin: Boolean) : Event(), C
 
     override fun getHandlers(): HandlerList = HANDLERS
 
-    override fun setCancelled(set: Boolean) { this.isCancelled = set }
+    override fun setCancelled(set: Boolean) {
+        this.isCancelled = set
+    }
+
     override fun isCancelled(): Boolean = isCancelled
 }
