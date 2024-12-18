@@ -16,7 +16,10 @@ object PermissionsManager {
         if (usingPermissionsHandler.isNotEmpty()) {
             AdvancedVanish.log(Level.INFO, "Using $usingPermissionsHandler for vanish priority.")
         } else {
-            AdvancedVanish.log(Level.INFO, "Could not find a supported permissions plugin, vanish priority will not be used.")
+            AdvancedVanish.log(
+                Level.INFO,
+                "Could not find a supported permissions plugin, vanish priority will not be used."
+            )
         }
     }
 
