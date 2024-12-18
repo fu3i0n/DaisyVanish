@@ -25,7 +25,10 @@ object ServerSyncManager : Listener {
                 "redis" -> RedisServerSyncStore
                 "sql" -> SqlServerSyncStore
                 else -> {
-                    AdvancedVanish.log(Level.WARNING, "Invalid mode set for cross-server-support. Please double check your config.")
+                    AdvancedVanish.log(
+                        Level.WARNING,
+                        "Invalid mode set for cross-server-support. Please double check your config."
+                    )
                     return
                 }
             }
