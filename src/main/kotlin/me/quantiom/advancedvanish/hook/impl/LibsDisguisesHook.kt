@@ -20,7 +20,8 @@ class LibsDisguisesHook : IHook {
                 DisguiseAPI.undisguiseToAll(event.player)
                 event.player.sendConfigMessage("disguise-removed-because-vanish")
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
     }
 
     @EventHandler
@@ -30,6 +31,7 @@ class LibsDisguisesHook : IHook {
                 event.isCancelled = true
                 event.entity.sendConfigMessage("disguise-removed-because-vanish")
             }
-        } catch (ignored: Exception) {}
+        } catch (ignored: Exception) {
+        }
     }
 }
