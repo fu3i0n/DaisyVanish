@@ -1,8 +1,8 @@
 package me.quantiom.advancedvanish.listener
 
 import me.quantiom.advancedvanish.config.Config
-import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.state.VanishStateManager
+import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.util.AdvancedVanishAPI
 import me.quantiom.advancedvanish.util.isVanished
 import me.quantiom.advancedvanish.util.sendConfigMessage
@@ -46,12 +46,19 @@ object VanishListener : Listener {
             if (ServerSyncManager.crossServerSupportEnabled && ServerSyncManager.loginVanishStates.containsKey(player.uniqueId)) {
                 doVanish = ServerSyncManager.loginVanishStates[player.uniqueId]!!
             } else {
-                if (Config.getValueOrDefault("keep-vanish-state", false) && VanishStateManager.savedVanishStates.containsKey(player.uniqueId)) {
+                if (Config.getValueOrDefault(
+                        "keep-vanish-state",
+                        false
+                    ) && VanishStateManager.savedVanishStates.containsKey(player.uniqueId)
+                ) {
                     if (VanishStateManager.savedVanishStates[player.uniqueId]!!) {
                         doVanish = true
                         VanishStateManager.savedVanishStates.remove(player.uniqueId)
                     }
-                } else if (Config.getValueOrDefault("vanish-on-join", false) || player.hasPermission(joinVanishedPermission)) {
+                } else if (Config.getValueOrDefault("vanish-on-join", false) || player.hasPermission(
+                        joinVanishedPermission
+                    )
+                ) {
                     doVanish = true
                 }
             }
@@ -76,7 +83,13 @@ object VanishListener : Listener {
         val player = event.player
         val isVanished = player.isVanished()
 
-        if (isVanished || player.hasPermission(Config.getValueOrDefault("permissions.vanish", "advancedvanish.vanish"))) {
+        if (isVanished || player.hasPermission(
+                Config.getValueOrDefault(
+                    "permissions.vanish",
+                    "advancedvanish.vanish"
+                )
+            )
+        ) {
             VanishStateManager.savedVanishStates[player.uniqueId] = isVanished
 
             if (isVanished) {
@@ -124,7 +137,10 @@ object VanishListener : Listener {
     @EventHandler
     private fun onInteract(event: PlayerInteractEvent) {
         if (event.player.isVanished() && event.action == Action.RIGHT_CLICK_BLOCK) {
-            if (event.clickedBlock?.type == Material.CHEST || event.clickedBlock?.type == Material.TRAPPED_CHEST || event.clickedBlock?.type == Material.ENDER_CHEST || event.clickedBlock?.type!!.name.endsWith("SHULKER_BOX") || event.clickedBlock?.type!!.name == "BARREL") {
+            if (event.clickedBlock?.type == Material.CHEST || event.clickedBlock?.type == Material.TRAPPED_CHEST || event.clickedBlock?.type == Material.ENDER_CHEST || event.clickedBlock?.type!!.name.endsWith(
+                    "SHULKER_BOX"
+                ) || event.clickedBlock?.type!!.name == "BARREL"
+            ) {
                 if (!Config.getValueOrDefault(
                         "when-vanished.open-and-use-chests",
                         false
@@ -136,14 +152,17 @@ object VanishListener : Listener {
                             inventoryName = "Chest"
                             (event.clickedBlock?.state as Chest).inventory
                         }
+
                         "BARREL" -> {
                             inventoryName = "Barrel"
                             (event.clickedBlock?.state as Barrel).inventory
                         }
+
                         "ENDER_CHEST" -> {
                             inventoryName = "Enderchest"
                             event.player.enderChest
                         }
+
                         else -> {
                             inventoryName = "Shulker"
                             (event.clickedBlock?.state as ShulkerBox).inventory
@@ -229,20 +248,34 @@ object VanishListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     private fun onDamage(event: EntityDamageByEntityEvent) {
         (event.damager as? Player)?.let { damager ->
-            if (damager.isVanished() && !Config.getValueOrDefault("when-vanished.attack-entities", false) && !VanishStateManager.canInteract(damager)) {
+            if (damager.isVanished() && !Config.getValueOrDefault(
+                    "when-vanished.attack-entities",
+                    false
+                ) && !VanishStateManager.canInteract(damager)
+            ) {
                 damager.sendConfigMessage("cannot-attack-entities-while-vanished")
                 event.isCancelled = true
             }
         }
 
         (event.entity as? Player)?.let { attacked ->
-            if (attacked.isVanished() && !Config.getValueOrDefault("when-vanished.receive-damage-from-entities", false)) {
+            if (attacked.isVanished() && !Config.getValueOrDefault(
+                    "when-vanished.receive-damage-from-entities",
+                    false
+                )
+            ) {
                 event.isCancelled = true
             }
         }
     }
 
-    private fun genericEventCancel(event: Cancellable, player: Player, toggle: String, message: String, ignoreIfCanInteract: Boolean) {
+    private fun genericEventCancel(
+        event: Cancellable,
+        player: Player,
+        toggle: String,
+        message: String,
+        ignoreIfCanInteract: Boolean
+    ) {
         if (player.isVanished() && !Config.getValueOrDefault(toggle, false)) {
             if (ignoreIfCanInteract && VanishStateManager.canInteract(player)) {
                 return
