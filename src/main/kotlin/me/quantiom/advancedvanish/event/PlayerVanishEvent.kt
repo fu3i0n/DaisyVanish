@@ -1,4 +1,5 @@
 @file:JvmName("PlayerVanishEvent")
+
 package me.quantiom.advancedvanish.event
 
 import org.bukkit.entity.Player
