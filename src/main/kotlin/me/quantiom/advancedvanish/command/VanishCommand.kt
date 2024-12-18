@@ -48,14 +48,20 @@ object VanishCommand : BaseCommand() {
     private fun onVersionCommand(sender: CommandSender) {
         if (!permissionCheck(sender, "permissions.version-command", "advancedvanish.version-command")) return
 
-        sender.sendConfigMessage("version-command",
+        sender.sendConfigMessage(
+            "version-command",
             "%version%" to "v${AdvancedVanish.instance!!.description.version}"
         )
     }
 
     @Subcommand("reload|reloadconfig")
     private fun onReloadCommand(sender: CommandSender) {
-        if (!permissionCheck(sender, "permissions.reload-config-command", "advancedvanish.reload-config-command")) return
+        if (!permissionCheck(
+                sender,
+                "permissions.reload-config-command",
+                "advancedvanish.reload-config-command"
+            )
+        ) return
 
         Config.reload().also { sender.sendConfigMessage("config-reloaded") }
 
@@ -87,7 +93,10 @@ object VanishCommand : BaseCommand() {
         if (PermissionsManager.handler == null) {
             player.sendConfigMessage("not-using-vanish-priority")
         } else {
-            player.sendConfigMessage("vanish-priority", "%priority%" to PermissionsManager.handler!!.getVanishPriority(player).toString())
+            player.sendConfigMessage(
+                "vanish-priority",
+                "%priority%" to PermissionsManager.handler!!.getVanishPriority(player).toString()
+            )
         }
     }
 
@@ -95,7 +104,8 @@ object VanishCommand : BaseCommand() {
     private fun onListCommand(player: Player) {
         if (!permissionCheck(player, "permissions.list-command", "advancedvanish.list-command")) return
 
-        val players = AdvancedVanishAPI.vanishedPlayers.map(Bukkit::getPlayer).map { it!! }.joinToString(", ", transform = Player::getName)
+        val players = AdvancedVanishAPI.vanishedPlayers.map(Bukkit::getPlayer).map { it!! }
+            .joinToString(", ", transform = Player::getName)
 
         player.sendConfigMessage("vanished-list", "%vanished-players%" to players.ifEmpty { "None" })
     }
@@ -106,7 +116,8 @@ object VanishCommand : BaseCommand() {
     private fun onStatusCommand(sender: CommandSender, target: OnlinePlayer) {
         if (!permissionCheck(sender, "permissions.status-command", "advancedvanish.status-command")) return
 
-        sender.sendConfigMessage("vanish-status-command",
+        sender.sendConfigMessage(
+            "vanish-status-command",
             "%target-name%" to target.player.name,
             "%vanish-status%" to if (target.player.isVanished()) "on" else "off",
             "%vanish-status-word%" to if (target.player.isVanished()) "vanished" else "not vanished"
@@ -137,13 +148,15 @@ object VanishCommand : BaseCommand() {
         }
 
         if (sendAlready) {
-            sender.sendConfigMessage("vanish-set-other-command-already",
+            sender.sendConfigMessage(
+                "vanish-set-other-command-already",
                 "%target-name%" to target.player.name,
                 "%vanish-status%" to if (target.player.isVanished()) "on" else "off",
                 "%vanish-status-word%" to if (target.player.isVanished()) "vanished" else "not vanished"
             )
         } else {
-            sender.sendConfigMessage("vanish-set-other-command",
+            sender.sendConfigMessage(
+                "vanish-set-other-command",
                 "%target-name%" to target.player.name,
                 "%vanish-status%" to if (target.player.isVanished()) "on" else "off",
                 "%vanish-status-word%" to if (target.player.isVanished()) "vanished" else "not vanished"
@@ -163,7 +176,8 @@ object VanishCommand : BaseCommand() {
             AdvancedVanishAPI.vanishPlayer(target.player)
         }
 
-        sender.sendConfigMessage("vanish-set-other-command",
+        sender.sendConfigMessage(
+            "vanish-set-other-command",
             "%target-name%" to target.player.name,
             "%vanish-status%" to if (target.player.isVanished()) "on" else "off",
             "%vanish-status-word%" to if (target.player.isVanished()) "vanished" else "not vanished"
