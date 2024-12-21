@@ -5,7 +5,7 @@ import me.quantiom.advancedvanish.event.PlayerVanishEvent
 import me.quantiom.advancedvanish.hook.IHook
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
-import org.dynmap.DynmapAPI
+import org.dynmap.DynmapCommonAPI as DynmapAPI
 
 class DynmapHook : IHook {
     override fun getID() = "Dynmap"
@@ -14,11 +14,11 @@ class DynmapHook : IHook {
 
     @EventHandler
     private fun onVanish(event: PlayerVanishEvent) {
-        this.dynmap.setPlayerVisiblity(event.player, false)
+        this.dynmap.setPlayerVisiblity(event.player.toString(), false)
     }
 
     @EventHandler
     private fun onUnVanish(event: PlayerUnVanishEvent) {
-        this.dynmap.setPlayerVisiblity(event.player, true)
+        this.dynmap.setPlayerVisiblity(event.player.toString(), true)
     }
 }

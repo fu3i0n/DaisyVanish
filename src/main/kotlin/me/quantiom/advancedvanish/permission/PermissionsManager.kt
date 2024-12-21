@@ -1,7 +1,6 @@
 package me.quantiom.advancedvanish.permission
 
 import me.quantiom.advancedvanish.AdvancedVanish
-import me.quantiom.advancedvanish.permission.impl.BPermissionsHandler
 import me.quantiom.advancedvanish.permission.impl.GroupManagerHandler
 import me.quantiom.advancedvanish.permission.impl.LuckPermsHandler
 import org.bukkit.Bukkit
@@ -29,10 +28,6 @@ object PermissionsManager {
             return "LuckPerms"
         }
 
-        if (Bukkit.getPluginManager().isPluginEnabled("bPermissions")) {
-            this.handler = BPermissionsHandler()
-            return "bPermissions"
-        }
 
         if (Bukkit.getPluginManager().isPluginEnabled("GroupManager")) {
             this.handler = GroupManagerHandler()

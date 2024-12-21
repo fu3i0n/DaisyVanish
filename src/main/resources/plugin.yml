@@ -1,12 +1,26 @@
-name: ${project.name}
-description: ${project.description}
+name: AdvancedVanish
+version: 1.8
+description: A plugin that allows players to vanish.
 author: quantiom
-version: ${project.version}
-main: ${project.groupId}.${project.artifactId}.${project.name}Plugin
-softdepend: [LuckPerms, PlaceholderAPI, GroupManager, PermissionsEx, bPermissions, DiscordSRV, Dynmap, squaremap, LibsDisguises, PlayerParticles, Essentials, PlaceholderAPI, ProtocolLib]
+main: me.quantiom.advancedvanish.Main
+softdepend:
+  - LuckPerms
+  - PlaceholderAPI
+  - GroupManager
+  - PermissionsEx
+  - bPermissions
+  - DiscordSRV
+  - Dynmap
+  - squaremap
+  - LibsDisguises
+  - PlayerParticles
+  - Essentials
+  - ProtocolLib
 api-version: 1.13
 commands:
   vanish:
-    description: The main vanish command.
-    aliases: [v, advancedvanish]
-    usage: /vanish
+    description: "The main vanish command."
+    aliases:
+      - v
+      - advancedvanish
+    usage: "/vanish"
