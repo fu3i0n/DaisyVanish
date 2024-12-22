@@ -41,7 +41,7 @@ val versions =
         "dynmap" to "3.7-beta-6",
         "squaremap" to "1.3.3",
         "playerParticles" to "7.4",
-        "jedis" to "4.3.1",
+        "jedis" to "5.2.0",
         "exposed" to "0.43.0",
         "discordSRV" to "1.28.0",
         "essentials" to "2.20.1",
