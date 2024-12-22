@@ -40,7 +40,7 @@ object AdvancedVanish {
             UpdateChecker.getVersion {
                 if (it != plugin.description.version) {
                     plugin.logger.info("A new update for AdvancedVanish (v$it) is available:")
-                    plugin.logger.info("https://github.com/fu3i0n/AdvancedVanish/releases/tag/Release")
+                    plugin.logger.info("https://github.com/fu3i0n/AdvancedVanish/releases/latest")
                 }
             }
         }
