@@ -12,13 +12,14 @@ import java.util.function.Consumer
 object UpdateChecker {
     private const val REPO_OWNER = "fu3i0n"
     private const val REPO_NAME = "AdvancedVanish"
+    private const val RELEASE_TAG = "1.2.8"
 
     fun getVersion(consumer: Consumer<String?>) {
         Bukkit.getScheduler().runTaskAsynchronously(
             AdvancedVanish.instance!!,
             Runnable {
                 try {
-                    val url = URL("https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/latest")
+                    val url = URL("https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/releases/tags/$RELEASE_TAG")
                     val connection = url.openConnection() as HttpURLConnection
                     connection.requestMethod = "GET"
                     connection.connect()
