@@ -127,6 +127,7 @@ tasks {
 
     withType<ShadowJar>().configureEach {
         minimize()
+        relocate("net.byteflux.libby", "me.quantiom.libs.libby")
         relocate("co.aikar.commands", "me.quantiom.libs.acf")
         relocate("redis.clients.jedis", "me.quantiom.libs.jedis")
         exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
