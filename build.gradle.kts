@@ -36,7 +36,7 @@ val versions =
         "lombok" to "1.18.28",
         "libby" to "1.2.0",
         "kotlinStdlib" to "2.1.0",
-        "protocolLib" to "4.8.0",
+        "protocolLib" to "5.3.0",
         "placeholderApi" to "2.11.6",
         "dynmap" to "3.7-beta-6",
         "squaremap" to "1.3.3",
