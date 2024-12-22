@@ -54,11 +54,15 @@ object UpdateChecker {
         }
     }
 
-    private fun isUpdateAvailable(currentVersion: String, latestVersion: String): Boolean {
-        return compareVersions(currentVersion, latestVersion) < 0
-    }
+    private fun isUpdateAvailable(
+        currentVersion: String,
+        latestVersion: String,
+    ): Boolean = compareVersions(currentVersion, latestVersion) < 0
 
-    private fun compareVersions(version1: String, version2: String): Int {
+    private fun compareVersions(
+        version1: String,
+        version2: String,
+    ): Int {
         val versionParts1 = version1.split(".").map { it.toInt() }
         val versionParts2 = version2.split(".").map { it.toInt() }
 
