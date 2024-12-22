@@ -40,7 +40,7 @@ val versions =
         "placeholderApi" to "2.11.6",
         "dynmap" to "3.7-beta-6",
         "squaremap" to "1.3.3",
-        "playerParticles" to "7.4",
+        "playerParticles" to "8.8",
         "jedis" to "5.2.0",
         "exposed" to "0.43.0",
         "discordSRV" to "1.28.0",
