@@ -23,17 +23,20 @@ class DiscordSrvHook : IHook {
     private fun onVanish(event: PlayerVanishEvent) {
         event.player.setMetadata("vanished", FixedMetadataValue(AdvancedVanish.instance!!, true))
 
-        if (!event.onJoin && Config.getValueOrDefault(
+        if (!event.onJoin &&
+            Config.getValueOrDefault(
                 "join-leave-messages.fake-leave-message-on-vanish.enable",
-                false
+                false,
             )
         ) {
-            val message = Config.getValueOrDefault(
-                "join-leave-messages.fake-leave-message-on-vanish.message",
-                "<yellow>%player-name% has left the game."
-            ).applyPlaceholders(
-                "%player-name%" to event.player.name
-            ).color()
+            val message =
+                Config
+                    .getValueOrDefault(
+                        "join-leave-messages.fake-leave-message-on-vanish.message",
+                        "<yellow>%player-name% has left the game.",
+                    ).applyPlaceholders(
+                        "%player-name%" to event.player.name,
+                    ).color()
 
             DiscordSRV.getPlugin().sendLeaveMessage(event.player, message.colorLegacy())
         }
@@ -43,17 +46,20 @@ class DiscordSrvHook : IHook {
     private fun onUnVanish(event: PlayerUnVanishEvent) {
         event.player.removeMetadata("vanished", AdvancedVanish.instance!!)
 
-        if (!event.onLeave && Config.getValueOrDefault(
+        if (!event.onLeave &&
+            Config.getValueOrDefault(
                 "join-leave-messages.fake-join-message-on-unvanish.enable",
-                false
+                false,
             )
         ) {
-            val message = Config.getValueOrDefault(
-                "join-leave-messages.fake-join-message-on-unvanish.message",
-                "<yellow>%player-name% has joined the game."
-            ).applyPlaceholders(
-                "%player-name%" to event.player.name
-            ).color()
+            val message =
+                Config
+                    .getValueOrDefault(
+                        "join-leave-messages.fake-join-message-on-unvanish.message",
+                        "<yellow>%player-name% has joined the game.",
+                    ).applyPlaceholders(
+                        "%player-name%" to event.player.name,
+                    ).color()
 
             DiscordSRV.getPlugin().sendJoinMessage(event.player, message.colorLegacy())
         }

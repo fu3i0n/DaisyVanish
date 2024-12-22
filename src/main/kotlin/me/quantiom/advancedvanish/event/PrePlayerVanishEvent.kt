@@ -7,7 +7,11 @@ import org.bukkit.event.Cancellable
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PrePlayerVanishEvent(val player: Player, val onJoin: Boolean) : Event(), Cancellable {
+class PrePlayerVanishEvent(
+    val player: Player,
+    val onJoin: Boolean,
+) : Event(),
+    Cancellable {
     companion object {
         val HANDLERS = HandlerList()
 

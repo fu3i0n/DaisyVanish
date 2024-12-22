@@ -7,7 +7,7 @@ import org.bukkit.Bukkit
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
-import java.util.*
+import java.util.UUID
 import java.util.logging.Level
 
 object SqlServerSyncStore : IServerSyncStore {
@@ -21,21 +21,23 @@ object SqlServerSyncStore : IServerSyncStore {
         val database = Config.getValueOrDefault("cross-server-support.sql.database", "minecraft")
 
         try {
-            this.connection = DriverManager.getConnection(
-                "jdbc:mysql://$host:$port/$database",
-                username,
-                password
-            )
+            this.connection =
+                DriverManager.getConnection(
+                    "jdbc:mysql://$host:$port/$database",
+                    username,
+                    password,
+                )
 
             val statement = this.connection!!.createStatement()
-            statement.executeUpdate("""
+            statement.executeUpdate(
+                """
                 CREATE TABLE IF NOT EXISTS advancedvanish (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     uuid CHAR(36) NOT NULL,
                     state BOOLEAN NOT NULL
                 );
-            """.trimIndent())
-
+                """.trimIndent(),
+            )
         } catch (e: SQLException) {
             AdvancedVanish.log(Level.SEVERE, "There was an error while attempting to make a connection with SQL: ")
             e.printStackTrace()
@@ -68,19 +70,25 @@ object SqlServerSyncStore : IServerSyncStore {
         return false
     }
 
-    override fun setAsync(key: UUID, value: Boolean) {
-        Bukkit.getScheduler().runTaskAsynchronously(AdvancedVanish.instance!!, Runnable {
-            try {
-                val updateQuery = "INSERT INTO advancedvanish (uuid, state) VALUES (?, ?) ON DUPLICATE KEY UPDATE state = ?"
-                val preparedStatement = connection!!.prepareStatement(updateQuery)
-                preparedStatement.setString(1, key.toString())
-                preparedStatement.setBoolean(2, value)
-                preparedStatement.setBoolean(3, value)
-                preparedStatement.executeUpdate()
-            } catch (e: SQLException) {
-                AdvancedVanish.log(Level.SEVERE, "There was an error while attempting to make a connection with SQL: ")
-                e.printStackTrace()
-            }
-        })
+    override fun setAsync(
+        key: UUID,
+        value: Boolean,
+    ) {
+        Bukkit.getScheduler().runTaskAsynchronously(
+            AdvancedVanish.instance!!,
+            Runnable {
+                try {
+                    val updateQuery = "INSERT INTO advancedvanish (uuid, state) VALUES (?, ?) ON DUPLICATE KEY UPDATE state = ?"
+                    val preparedStatement = connection!!.prepareStatement(updateQuery)
+                    preparedStatement.setString(1, key.toString())
+                    preparedStatement.setBoolean(2, value)
+                    preparedStatement.setBoolean(3, value)
+                    preparedStatement.executeUpdate()
+                } catch (e: SQLException) {
+                    AdvancedVanish.log(Level.SEVERE, "There was an error while attempting to make a connection with SQL: ")
+                    e.printStackTrace()
+                }
+            },
+        )
     }
 }

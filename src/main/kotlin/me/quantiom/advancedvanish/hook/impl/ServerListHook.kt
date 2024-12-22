@@ -10,19 +10,20 @@ import me.quantiom.advancedvanish.hook.IHook
 import me.quantiom.advancedvanish.util.AdvancedVanishAPI
 
 class ServerListHook : IHook {
-    private val packetListener = object : PacketAdapter(
-        params(
-            AdvancedVanish.instance,
-            PacketType.Status.Server.OUT_SERVER_INFO
-        ).optionAsync()
-    ) {
-        override fun onPacketSending(event: PacketEvent?) {
-            val ping = event!!.packet.serverPings.read(0) as WrappedServerPing
+    private val packetListener =
+        object : PacketAdapter(
+            params(
+                AdvancedVanish.instance,
+                PacketType.Status.Server.OUT_SERVER_INFO,
+            ).optionAsync(),
+        ) {
+            override fun onPacketSending(event: PacketEvent?) {
+                val ping = event!!.packet.serverPings.read(0) as WrappedServerPing
 
-            ping.playersOnline -= AdvancedVanishAPI.vanishedPlayers.size
-            ping.setPlayers(ping.players.filter { AdvancedVanishAPI.vanishedPlayers.find { vUUID -> vUUID == it.uuid } == null })
+                ping.playersOnline -= AdvancedVanishAPI.vanishedPlayers.size
+                ping.setPlayers(ping.players.filter { AdvancedVanishAPI.vanishedPlayers.find { vUUID -> vUUID == it.uuid } == null })
+            }
         }
-    }
 
     override fun getID() = "ServerList"
 

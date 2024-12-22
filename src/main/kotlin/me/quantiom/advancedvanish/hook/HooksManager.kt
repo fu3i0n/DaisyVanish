@@ -3,7 +3,15 @@ package me.quantiom.advancedvanish.hook
 import com.google.common.collect.Lists
 import me.quantiom.advancedvanish.AdvancedVanish
 import me.quantiom.advancedvanish.config.Config
-import me.quantiom.advancedvanish.hook.impl.*
+import me.quantiom.advancedvanish.hook.impl.ActionBarHook
+import me.quantiom.advancedvanish.hook.impl.DiscordSrvHook
+import me.quantiom.advancedvanish.hook.impl.DynmapHook
+import me.quantiom.advancedvanish.hook.impl.EssentialsHook
+import me.quantiom.advancedvanish.hook.impl.LibsDisguisesHook
+import me.quantiom.advancedvanish.hook.impl.PlaceHolderApiHook
+import me.quantiom.advancedvanish.hook.impl.PlayerParticlesHook
+import me.quantiom.advancedvanish.hook.impl.ServerListHook
+import me.quantiom.advancedvanish.hook.impl.SquaremapHook
 import org.bukkit.Bukkit
 import org.bukkit.event.HandlerList
 import java.util.logging.Level
@@ -44,11 +52,14 @@ object HooksManager {
         this.setupHooks()
     }
 
-    fun isHookEnabled(hookID: String): Boolean {
-        return this.hooks.find { it.getID() == hookID } != null
-    }
+    fun isHookEnabled(hookID: String): Boolean = this.hooks.find { it.getID() == hookID } != null
 
-    private fun <T> addHook(configOption: String, dependencyName: String, hookName: String, instanciator: () -> (T)) {
+    private fun <T> addHook(
+        configOption: String,
+        dependencyName: String,
+        hookName: String,
+        instanciator: () -> (T),
+    ) {
         if (Config.getValueOrDefault("hooks.$configOption", false)) {
             if (!Bukkit.getPluginManager().isPluginEnabled(dependencyName) && dependencyName != "ActionBarAPI") {
                 AdvancedVanish.log(Level.INFO, "$dependencyName not found, not using the $hookName hook.")

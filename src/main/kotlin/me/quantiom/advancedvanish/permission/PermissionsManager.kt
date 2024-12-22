@@ -17,7 +17,7 @@ object PermissionsManager {
         } else {
             AdvancedVanish.log(
                 Level.INFO,
-                "Could not find a supported permissions plugin, vanish priority will not be used."
+                "Could not find a supported permissions plugin, vanish priority will not be used.",
             )
         }
     }
@@ -27,7 +27,6 @@ object PermissionsManager {
             this.handler = LuckPermsHandler()
             return "LuckPerms"
         }
-
 
         if (Bukkit.getPluginManager().isPluginEnabled("GroupManager")) {
             this.handler = GroupManagerHandler()

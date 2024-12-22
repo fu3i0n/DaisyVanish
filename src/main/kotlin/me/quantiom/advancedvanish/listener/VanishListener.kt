@@ -23,22 +23,29 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.entity.FoodLevelChangeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.player.*
+import org.bukkit.event.player.AsyncPlayerChatEvent
+import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerPickupItemEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 object VanishListener : Listener {
     @EventHandler
     private fun onJoin(event: PlayerJoinEvent) {
         val player = event.player
 
-        val vanishPermission = Config.getValueOrDefault(
-            "permissions.vanish",
-            "advancedvanish.vanish"
-        )
+        val vanishPermission =
+            Config.getValueOrDefault(
+                "permissions.vanish",
+                "advancedvanish.vanish",
+            )
 
-        val joinVanishedPermission = Config.getValueOrDefault(
-            "permissions.join-vanished",
-            "advancedvanish.join-vanished"
-        )
+        val joinVanishedPermission =
+            Config.getValueOrDefault(
+                "permissions.join-vanished",
+                "advancedvanish.join-vanished",
+            )
 
         var doVanish = false
 
@@ -48,15 +55,17 @@ object VanishListener : Listener {
             } else {
                 if (Config.getValueOrDefault(
                         "keep-vanish-state",
-                        false
-                    ) && VanishStateManager.savedVanishStates.containsKey(player.uniqueId)
+                        false,
+                    ) &&
+                    VanishStateManager.savedVanishStates.containsKey(player.uniqueId)
                 ) {
                     if (VanishStateManager.savedVanishStates[player.uniqueId]!!) {
                         doVanish = true
                         VanishStateManager.savedVanishStates.remove(player.uniqueId)
                     }
-                } else if (Config.getValueOrDefault("vanish-on-join", false) || player.hasPermission(
-                        joinVanishedPermission
+                } else if (Config.getValueOrDefault("vanish-on-join", false) ||
+                    player.hasPermission(
+                        joinVanishedPermission,
                     )
                 ) {
                     doVanish = true
@@ -83,11 +92,12 @@ object VanishListener : Listener {
         val player = event.player
         val isVanished = player.isVanished()
 
-        if (isVanished || player.hasPermission(
+        if (isVanished ||
+            player.hasPermission(
                 Config.getValueOrDefault(
                     "permissions.vanish",
-                    "advancedvanish.vanish"
-                )
+                    "advancedvanish.vanish",
+                ),
             )
         ) {
             VanishStateManager.savedVanishStates[player.uniqueId] = isVanished
@@ -111,7 +121,7 @@ object VanishListener : Listener {
             event.player,
             "when-vanished.send-messages",
             "cannot-chat-while-vanished",
-            false
+            false,
         )
 
     @EventHandler
@@ -121,7 +131,7 @@ object VanishListener : Listener {
             event.player,
             "when-vanished.place-blocks",
             "cannot-place-blocks-while-vanished",
-            true
+            true,
         )
 
     @EventHandler
@@ -131,49 +141,55 @@ object VanishListener : Listener {
             event.player,
             "when-vanished.break-blocks",
             "cannot-break-blocks-while-vanished",
-            true
+            true,
         )
 
     @EventHandler
     private fun onInteract(event: PlayerInteractEvent) {
         if (event.player.isVanished() && event.action == Action.RIGHT_CLICK_BLOCK) {
-            if (event.clickedBlock?.type == Material.CHEST || event.clickedBlock?.type == Material.TRAPPED_CHEST || event.clickedBlock?.type == Material.ENDER_CHEST || event.clickedBlock?.type!!.name.endsWith(
-                    "SHULKER_BOX"
-                ) || event.clickedBlock?.type!!.name == "BARREL"
+            if (event.clickedBlock?.type == Material.CHEST ||
+                event.clickedBlock?.type == Material.TRAPPED_CHEST ||
+                event.clickedBlock?.type == Material.ENDER_CHEST ||
+                event.clickedBlock?.type!!.name.endsWith(
+                    "SHULKER_BOX",
+                ) ||
+                event.clickedBlock?.type!!.name == "BARREL"
             ) {
                 if (!Config.getValueOrDefault(
                         "when-vanished.open-and-use-chests",
-                        false
+                        false,
                     )
                 ) {
                     val inventoryName: String
-                    val inventory = when (event.clickedBlock!!.type.name) {
-                        "CHEST", "TRAPPED_CHEST" -> {
-                            inventoryName = "Chest"
-                            (event.clickedBlock?.state as Chest).inventory
-                        }
+                    val inventory =
+                        when (event.clickedBlock!!.type.name) {
+                            "CHEST", "TRAPPED_CHEST" -> {
+                                inventoryName = "Chest"
+                                (event.clickedBlock?.state as Chest).inventory
+                            }
 
-                        "BARREL" -> {
-                            inventoryName = "Barrel"
-                            (event.clickedBlock?.state as Barrel).inventory
-                        }
+                            "BARREL" -> {
+                                inventoryName = "Barrel"
+                                (event.clickedBlock?.state as Barrel).inventory
+                            }
 
-                        "ENDER_CHEST" -> {
-                            inventoryName = "Enderchest"
-                            event.player.enderChest
-                        }
+                            "ENDER_CHEST" -> {
+                                inventoryName = "Enderchest"
+                                event.player.enderChest
+                            }
 
-                        else -> {
-                            inventoryName = "Shulker"
-                            (event.clickedBlock?.state as ShulkerBox).inventory
+                            else -> {
+                                inventoryName = "Shulker"
+                                (event.clickedBlock?.state as ShulkerBox).inventory
+                            }
                         }
-                    }
 
                     if (inventoryName == "Enderchest") {
                         event.player.openInventory(inventory)
                     } else {
                         val cloneInventory =
-                            Bukkit.createInventory(null, inventory.size, "AdvancedVanish $inventoryName")
+                            Bukkit
+                                .createInventory(null, inventory.size, "AdvancedVanish $inventoryName")
                                 .also { it.contents = inventory.contents }
 
                         event.player.openInventory(cloneInventory)
@@ -189,7 +205,7 @@ object VanishListener : Listener {
                 event.player,
                 "when-vanished.interact",
                 "",
-                true
+                true,
             )
         }
     }
@@ -206,7 +222,7 @@ object VanishListener : Listener {
             event.player,
             "when-vanished.pick-up-items",
             "",
-            true
+            true,
         )
 
     @EventHandler
@@ -216,7 +232,7 @@ object VanishListener : Listener {
             event.player,
             "when-vanished.drop-items",
             "cannot-drop-items-while-vanished",
-            true
+            true,
         )
 
     @EventHandler
@@ -227,7 +243,7 @@ object VanishListener : Listener {
                 event.entity as Player,
                 "when-vanished.lose-hunger",
                 "",
-                false
+                false,
             )
         }
     }
@@ -240,7 +256,7 @@ object VanishListener : Listener {
                 event.target as Player,
                 "when-vanished.mob-targeting",
                 "",
-                false
+                false,
             )
         }
     }
@@ -248,10 +264,12 @@ object VanishListener : Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     private fun onDamage(event: EntityDamageByEntityEvent) {
         (event.damager as? Player)?.let { damager ->
-            if (damager.isVanished() && !Config.getValueOrDefault(
+            if (damager.isVanished() &&
+                !Config.getValueOrDefault(
                     "when-vanished.attack-entities",
-                    false
-                ) && !VanishStateManager.canInteract(damager)
+                    false,
+                ) &&
+                !VanishStateManager.canInteract(damager)
             ) {
                 damager.sendConfigMessage("cannot-attack-entities-while-vanished")
                 event.isCancelled = true
@@ -259,9 +277,10 @@ object VanishListener : Listener {
         }
 
         (event.entity as? Player)?.let { attacked ->
-            if (attacked.isVanished() && !Config.getValueOrDefault(
+            if (attacked.isVanished() &&
+                !Config.getValueOrDefault(
                     "when-vanished.receive-damage-from-entities",
-                    false
+                    false,
                 )
             ) {
                 event.isCancelled = true
@@ -274,7 +293,7 @@ object VanishListener : Listener {
         player: Player,
         toggle: String,
         message: String,
-        ignoreIfCanInteract: Boolean
+        ignoreIfCanInteract: Boolean,
     ) {
         if (player.isVanished() && !Config.getValueOrDefault(toggle, false)) {
             if (ignoreIfCanInteract && VanishStateManager.canInteract(player)) {

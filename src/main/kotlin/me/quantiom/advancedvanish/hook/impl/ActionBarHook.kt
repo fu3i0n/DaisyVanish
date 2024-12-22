@@ -16,7 +16,10 @@ class ActionBarHook : IHook {
     private val updateTask: BukkitRunnable =
         object : BukkitRunnable() {
             override fun run() {
-                AdvancedVanishAPI.vanishedPlayers.map(Bukkit::getPlayer).map { it!! }.forEach(::sendActionBar)
+                AdvancedVanishAPI.vanishedPlayers
+                    .map(Bukkit::getPlayer)
+                    .map { it!! }
+                    .forEach(::sendActionBar)
             }
         }
 
@@ -34,7 +37,10 @@ class ActionBarHook : IHook {
         this.sendActionBarStr(player, Config.getValueOrDefault("messages.action-bar", "<red>You are in vanish."))
     }
 
-    private fun sendActionBarStr(player: Player, str: String) {
+    private fun sendActionBarStr(
+        player: Player,
+        str: String,
+    ) {
         player.sendActionBar(str.color())
     }
 

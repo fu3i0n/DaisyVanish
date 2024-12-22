@@ -6,5 +6,6 @@ interface IHook : Listener {
     fun getID(): String
 
     fun onEnable() {}
+
     fun onDisable() {}
 }

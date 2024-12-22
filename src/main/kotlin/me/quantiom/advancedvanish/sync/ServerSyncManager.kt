@@ -10,7 +10,7 @@ import me.quantiom.advancedvanish.sync.impl.SqlServerSyncStore
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent
-import java.util.*
+import java.util.UUID
 import java.util.logging.Level
 
 object ServerSyncManager : Listener {
@@ -21,17 +21,18 @@ object ServerSyncManager : Listener {
 
     fun setup() {
         if (Config.getValueOrDefault("cross-server-support.enabled", false)) {
-            serverSyncStoreImpl = when (Config.getValueOrDefault("cross-server-support.mode", "redis").lowercase()) {
-                "redis" -> RedisServerSyncStore
-                "sql" -> SqlServerSyncStore
-                else -> {
-                    AdvancedVanish.log(
-                        Level.WARNING,
-                        "Invalid mode set for cross-server-support. Please double check your config."
-                    )
-                    return
+            serverSyncStoreImpl =
+                when (Config.getValueOrDefault("cross-server-support.mode", "redis").lowercase()) {
+                    "redis" -> RedisServerSyncStore
+                    "sql" -> SqlServerSyncStore
+                    else -> {
+                        AdvancedVanish.log(
+                            Level.WARNING,
+                            "Invalid mode set for cross-server-support. Please double check your config.",
+                        )
+                        return
+                    }
                 }
-            }
 
             this.crossServerSupportEnabled = serverSyncStoreImpl!!.setup()
         } else {
@@ -53,19 +54,20 @@ object ServerSyncManager : Listener {
     }
 
     @EventHandler(ignoreCancelled = true)
-    fun onVanish(event: PlayerVanishEvent) =
-        run { if (!event.onJoin) this.setAsync(event.player.uniqueId, true) }
+    fun onVanish(event: PlayerVanishEvent) = run { if (!event.onJoin) this.setAsync(event.player.uniqueId, true) }
 
     @EventHandler(ignoreCancelled = true)
-    fun onUnVanish(event: PlayerUnVanishEvent) =
-        run { if (!event.onLeave) this.setAsync(event.player.uniqueId, false) }
+    fun onUnVanish(event: PlayerUnVanishEvent) = run { if (!event.onLeave) this.setAsync(event.player.uniqueId, false) }
 
     fun get(key: UUID): Boolean {
         if (!this.crossServerSupportEnabled) return false
         return this.serverSyncStoreImpl?.get(key)!!
     }
 
-    private fun setAsync(key: UUID, value: Boolean) {
+    private fun setAsync(
+        key: UUID,
+        value: Boolean,
+    ) {
         if (!this.crossServerSupportEnabled) return
         this.serverSyncStoreImpl?.setAsync(key, value)
     }

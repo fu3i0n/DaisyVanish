@@ -9,6 +9,6 @@ rootProject.name = "advancedvanish"
 buildCache {
     local {
         isEnabled = true
-        directory = file("${rootDir}/.gradle/build-cache")
+        directory = file("$rootDir/.gradle/build-cache")
     }
 }

@@ -6,7 +6,10 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.HandlerList
 
-class PlayerVanishEvent(val player: Player, val onJoin: Boolean) : Event() {
+class PlayerVanishEvent(
+    val player: Player,
+    val onJoin: Boolean,
+) : Event() {
     companion object {
         val HANDLERS = HandlerList()
 

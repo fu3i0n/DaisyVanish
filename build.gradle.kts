@@ -1,5 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+val ktlint by configurations.creating
+
 plugins {
     kotlin("jvm") version "2.1.0"
     id("com.gradleup.shadow") version "8.3.5"
@@ -27,25 +29,27 @@ repositories {
     maven("https://repo.md-5.net/content/groups/public/")
 }
 
-val versions = mapOf(
-    "paperApi" to "1.21.3-R0.1-SNAPSHOT",
-    "acfPaper" to "0.5.1-SNAPSHOT",
-    "lombok" to "1.18.28",
-    "libby" to "1.2.0",
-    "kotlinStdlib" to "2.1.0",
-    "protocolLib" to "4.8.0",
-    "placeholderApi" to "2.11.6",
-    "dynmap" to "3.7-beta-6",
-    "squaremap" to "1.3.3",
-    "playerParticles" to "7.4",
-    "jedis" to "4.3.1",
-    "exposed" to "0.43.0",
-    "discordSRV" to "1.28.0",
-    "essentials" to "2.20.1",
-    "libsdisguises" to "10.0.44",
-    "groupmanager" to "3.2",
-    "luckperms" to "5.4",
-)
+val versions =
+    mapOf(
+        "paperApi" to "1.21.3-R0.1-SNAPSHOT",
+        "acfPaper" to "0.5.1-SNAPSHOT",
+        "lombok" to "1.18.28",
+        "libby" to "1.2.0",
+        "kotlinStdlib" to "2.1.0",
+        "protocolLib" to "4.8.0",
+        "placeholderApi" to "2.11.6",
+        "dynmap" to "3.7-beta-6",
+        "squaremap" to "1.3.3",
+        "playerParticles" to "7.4",
+        "jedis" to "4.3.1",
+        "exposed" to "0.43.0",
+        "discordSRV" to "1.28.0",
+        "essentials" to "2.20.1",
+        "libsdisguises" to "10.0.44",
+        "groupmanager" to "3.2",
+        "luckperms" to "5.4",
+        "ktlint" to "1.5.0",
+    )
 
 dependencies {
     api("co.aikar:acf-paper:${versions["acfPaper"]}")
@@ -68,6 +72,11 @@ dependencies {
     compileOnly("net.luckperms:api:${versions["luckperms"]}")
     compileOnly("LibsDisguises:LibsDisguises:${versions["libsdisguises"]}") {
         exclude(group = "org.spigotmc", module = "spigot")
+    }
+    ktlint("com.pinterest.ktlint:ktlint-cli:${versions["ktlint"]}") {
+        attributes {
+            attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
+        }
     }
 }
 
@@ -122,4 +131,3 @@ tasks {
         dependsOn("shadowJar")
     }
 }
-

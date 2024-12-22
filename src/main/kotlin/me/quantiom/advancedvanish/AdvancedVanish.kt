@@ -17,17 +17,21 @@ object AdvancedVanish {
     var instance: AdvancedVanishPlugin? = null
     var commandManager: PaperCommandManager? = null
 
-    fun log(level: Level, msg: String) {
+    fun log(
+        level: Level,
+        msg: String,
+    ) {
         instance!!.logger.log(level, msg)
     }
 
     fun onEnable(plugin: AdvancedVanishPlugin) {
         instance = plugin
 
-        commandManager = PaperCommandManager(plugin).also {
-            it.enableUnstableAPI("help")
-            it.registerCommand(VanishCommand, true)
-        }
+        commandManager =
+            PaperCommandManager(plugin).also {
+                it.enableUnstableAPI("help")
+                it.registerCommand(VanishCommand, true)
+            }
 
         Config.reload()
 
@@ -35,7 +39,7 @@ object AdvancedVanish {
         if (Config.getValueOrDefault("check-for-updates", true)) {
             UpdateChecker.getVersion {
                 if (it != plugin.description.version) {
-                    plugin.logger.info("A new update for AdvancedVanish (v${it}) is available:")
+                    plugin.logger.info("A new update for AdvancedVanish (v$it) is available:")
                     plugin.logger.info("https://www.spigotmc.org/resources/advancedvanish.86036/")
                 }
             }

@@ -8,12 +8,11 @@ import org.bukkit.entity.Player
 class GroupManagerHandler : IPermissionsHandler {
     private val groupManager = Bukkit.getPluginManager().getPlugin("GroupManager") as GroupManager
 
-    override fun getVanishPriority(player: Player): Int {
-        return this.groupManager.worldsHolder
+    override fun getVanishPriority(player: Player): Int =
+        this.groupManager.worldsHolder
             .getWorldPermissions(player)
             .getAllPlayersPermissions(player.name)
             .filter { it.startsWith("advancedvanish-priority.") }
             .mapNotNull { it.split(".")[1].toIntOrNull() }
             .maxOrNull() ?: 0
-    }
 }

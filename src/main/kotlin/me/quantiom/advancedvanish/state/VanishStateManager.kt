@@ -13,15 +13,15 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 import java.lang.reflect.Type
-import java.util.*
+import java.util.UUID
 
 object VanishStateManager {
     val savedVanishStates: MutableMap<UUID, Boolean> = Maps.newHashMap()
     val interactEnabled: MutableSet<UUID> = Sets.newHashSet()
 
     fun onConfigReload() {
-        if (!Config.getValueOrDefault("keep-vanish-state", false)
-            || !Config.getValueOrDefault("keep-vanish-state-persistent", false)
+        if (!Config.getValueOrDefault("keep-vanish-state", false) ||
+            !Config.getValueOrDefault("keep-vanish-state-persistent", false)
         ) {
             return
         }
@@ -34,8 +34,8 @@ object VanishStateManager {
     }
 
     fun onDisable() {
-        if (!Config.getValueOrDefault("keep-vanish-state", false)
-            || !Config.getValueOrDefault("keep-vanish-state-persistent", false)
+        if (!Config.getValueOrDefault("keep-vanish-state", false) ||
+            !Config.getValueOrDefault("keep-vanish-state-persistent", false)
         ) {
             return
         }
@@ -43,11 +43,12 @@ object VanishStateManager {
         Bukkit.getOnlinePlayers().forEach {
             val isVanished = it.isVanished()
 
-            if (isVanished || it.hasPermission(
+            if (isVanished ||
+                it.hasPermission(
                     Config.getValueOrDefault(
                         "permissions.vanish",
-                        "advancedvanish.vanish"
-                    )
+                        "advancedvanish.vanish",
+                    ),
                 )
             ) {
                 this.savedVanishStates[it.uniqueId] = isVanished
@@ -57,14 +58,12 @@ object VanishStateManager {
         this.save()
     }
 
-    fun canInteract(player: Player): Boolean {
-        return this.interactEnabled.contains(player.uniqueId)
-    }
+    fun canInteract(player: Player): Boolean = this.interactEnabled.contains(player.uniqueId)
 
     private fun getFile(): File? {
         try {
             return File(
-                "${AdvancedVanish.instance!!.dataFolder}${File.separator}vanishStates.json"
+                "${AdvancedVanish.instance!!.dataFolder}${File.separator}vanishStates.json",
             ).also {
                 if (!it.exists()) {
                     it.createNewFile()
@@ -101,7 +100,6 @@ object VanishStateManager {
                 fileReader.close()
             }
         } catch (ignored: NullPointerException) {
-
         }
     }
 }
