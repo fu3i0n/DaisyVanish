@@ -84,7 +84,13 @@ java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
     withSourcesJar()
 }
-
+sourceSets {
+    main {
+        java {
+            srcDirs("src/main/kotlin") // Ensure Gradle is compiling files from this directory
+        }
+    }
+}
 tasks {
     named<ProcessResources>("processResources") {
         val props = mapOf("version" to version)
@@ -122,7 +128,7 @@ tasks {
     withType<ShadowJar>().configureEach {
         minimize()
         relocate("co.aikar.commands", "me.quantiom.libs.acf")
-        relocate("net.byteflux.libby", "me.quantiom.libs.libby")
+        relocate("redis.clients.jedis", "me.quantiom.libs.jedis")
         exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
         archiveClassifier.set("")
     }

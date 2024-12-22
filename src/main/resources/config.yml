@@ -233,4 +233,4 @@ command-handler-messages:
   generic-error: "<red>Error: %error%"
 
 # Config version - Do NOT change this manually
-config-version: %CONFIG_VERSION%
+config-version: 10
