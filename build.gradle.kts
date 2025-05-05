@@ -42,7 +42,7 @@ val versions =
         "squaremap" to "1.3.4",
         "playerParticles" to "8.8",
         "jedis" to "5.2.0",
-        "exposed" to "0.59.0",
+        "exposed" to "0.61.0",
         "discordSRV" to "1.29.0",
         "essentials" to "2.20.1",
         "libsdisguises" to "10.0.44",
