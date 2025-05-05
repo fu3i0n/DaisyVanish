@@ -35,7 +35,7 @@ val versions =
         "acfPaper" to "0.5.1-SNAPSHOT",
         "lombok" to "1.18.36",
         "libby" to "1.3.1",
-        "kotlinStdlib" to "2.1.10",
+        "kotlinStdlib" to "2.1.20",
         "protocolLib" to "5.3.0",
         "placeholderApi" to "2.11.6",
         "dynmap" to "3.7-beta-6",
