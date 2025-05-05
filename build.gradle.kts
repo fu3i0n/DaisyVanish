@@ -44,7 +44,7 @@ val versions =
         "jedis" to "5.2.0",
         "exposed" to "0.59.0",
         "discordSRV" to "1.29.0",
-        "essentials" to "2.20.1",
+        "essentials" to "2.21.0",
         "libsdisguises" to "10.0.44",
         "groupmanager" to "3.2",
         "luckperms" to "5.4",
