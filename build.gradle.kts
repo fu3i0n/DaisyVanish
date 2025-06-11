@@ -47,7 +47,7 @@ val versions =
         "essentials" to "2.21.1",
         "libsdisguises" to "10.0.44",
         "groupmanager" to "3.2",
-        "luckperms" to "5.4",
+        "luckperms" to "5.5",
         "ktlint" to "1.5.0",
     )
 
