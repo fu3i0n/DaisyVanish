@@ -43,7 +43,7 @@ val versions =
         "playerParticles" to "8.9",
         "jedis" to "6.0.0",
         "exposed" to "0.61.0",
-        "discordSRV" to "1.29.0",
+        "discordSRV" to "1.30.0",
         "essentials" to "2.21.1",
         "libsdisguises" to "10.0.44",
         "groupmanager" to "3.2",
