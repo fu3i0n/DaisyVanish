@@ -8,45 +8,28 @@ plugins {
 }
 
 group = "me.quantiom"
-version = "1.2.8"
+version = "1.2.9"
 description = "AdvancedVanish"
 
 repositories {
-    maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+    mavenCentral()
+    maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.aikar.co/content/groups/aikar/")
-    maven("https://repo.dmulloy2.net/nexus/repository/public/")
-    maven("https://repo.essentialsx.net/releases/")
-    maven("https://papermc.io/repo/repository/maven-public/")
     maven("https://jitpack.io")
     maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-    maven("https://nexus.scarsz.me/content/groups/public/")
-    maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://repo.mikeprimm.com/")
     maven("https://repo.alessiodp.com/releases/")
-    maven("https://repo.maven.apache.org/maven2/")
-    maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    maven("https://repo.rosewooddev.io/repository/public/")
-    maven("https://repo.md-5.net/content/groups/public/")
 }
 
 val versions =
     mapOf(
-        "paperApi" to "1.21.3-R0.1-SNAPSHOT",
+        "paperApi" to "1.21.4-R0.1-SNAPSHOT",
         "acfPaper" to "0.5.1-SNAPSHOT",
         "lombok" to "1.18.38",
         "libby" to "1.3.1",
         "kotlinStdlib" to "2.2.0",
         "protocolLib" to "5.3.0",
         "placeholderApi" to "2.11.6",
-        "dynmap" to "3.7-beta-6",
-        "squaremap" to "1.3.8",
-        "playerParticles" to "8.9",
-        "jedis" to "6.0.0",
         "exposed" to "0.61.0",
-        "discordSRV" to "1.30.0",
-        "essentials" to "2.21.1",
-        "libsdisguises" to "10.0.44",
-        "groupmanager" to "3.2",
         "luckperms" to "5.5",
         "ktlint" to "1.7.1",
     )
@@ -59,20 +42,10 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${versions["paperApi"]}")
     compileOnly("com.comphenix.protocol:ProtocolLib:${versions["protocolLib"]}")
     compileOnly("me.clip:placeholderapi:${versions["placeholderApi"]}")
-    compileOnly("us.dynmap:DynmapCoreAPI:${versions["dynmap"]}")
-    compileOnly("xyz.jpenilla:squaremap-api:${versions["squaremap"]}")
-    compileOnly("dev.esophose:playerparticles:${versions["playerParticles"]}")
-    compileOnly("redis.clients:jedis:${versions["jedis"]}")
     compileOnly("org.jetbrains.exposed:exposed-core:${versions["exposed"]}")
     compileOnly("org.jetbrains.exposed:exposed-dao:${versions["exposed"]}")
     compileOnly("org.jetbrains.exposed:exposed-jdbc:${versions["exposed"]}")
-    compileOnly("com.discordsrv:discordsrv:${versions["discordSRV"]}")
-    compileOnly("net.essentialsx:EssentialsX:${versions["essentials"]}")
-    compileOnly("com.github.ElgarL:groupmanager:${versions["groupmanager"]}")
     compileOnly("net.luckperms:api:${versions["luckperms"]}")
-    compileOnly("LibsDisguises:LibsDisguises:${versions["libsdisguises"]}") {
-        exclude(group = "org.spigotmc", module = "spigot")
-    }
     ktlint("com.pinterest.ktlint:ktlint-cli:${versions["ktlint"]}") {
         attributes {
             attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling.EXTERNAL))
@@ -101,14 +74,6 @@ tasks {
         }
     }
 
-    withType<JavaCompile>().configureEach {
-        options.encoding = "UTF-8"
-    }
-
-    withType<Javadoc>().configureEach {
-        options.encoding = "UTF-8"
-    }
-
     register<JavaExec>("ktlintCheck") {
         group = LifecycleBasePlugin.VERIFICATION_GROUP
         description = "Check Kotlin code style"
@@ -124,14 +89,45 @@ tasks {
         mainClass.set("com.pinterest.ktlint.Main")
         args("-F", "**/src/**/*.kt", "**.kts", "!**/build/**")
     }
+    withType<ShadowJar> {
+        archiveClassifier.set("shaded")
 
-    withType<ShadowJar>().configureEach {
-        minimize()
         relocate("net.byteflux.libby", "me.quantiom.libs.libby")
         relocate("co.aikar.commands", "me.quantiom.libs.acf")
-        relocate("redis.clients.jedis", "me.quantiom.libs.jedis")
-        exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
-        archiveClassifier.set("")
+
+        minimize {
+            exclude(dependency("org.jetbrains.exposed:.*:.*"))
+            exclude(dependency("org.jetbrains.kotlin:.*:.*"))
+            exclude(dependency("org.jetbrains.kotlinx:.*:.*"))
+        }
+
+        exclude(
+            "META-INF/*.SF",
+            "META-INF/*.DSA",
+            "META-INF/*.RSA",
+            "META-INF/LICENSE*",
+            "META-INF/NOTICE*",
+            "META-INF/DEPENDENCIES",
+            "META-INF/maven/**",
+            "META-INF/versions/**",
+            "META-INF/services/javax.*",
+            "**/*.html",
+            "**/*.txt",
+            "**/*.properties",
+            "**/*.kotlin_module",
+            "**/*.kotlin_metadata",
+            "**/*.kotlin_builtins",
+        )
+
+        mergeServiceFiles()
+
+        manifest {
+            attributes(
+                "Implementation-Title" to project.name,
+                "Implementation-Version" to project.version,
+                "Built-By" to System.getProperty("user.name"),
+            )
+        }
     }
 
     named("build") {

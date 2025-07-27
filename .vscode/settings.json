@@ -1,0 +1,7 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "yaml.schemas": {
+    "https://www.schemastore.org/bukkit-plugin.json": "file:///c%3A/Users/Amari/Desktop/AdvancedVanish/src/main/resources/plugin.yml"
+  }
+}

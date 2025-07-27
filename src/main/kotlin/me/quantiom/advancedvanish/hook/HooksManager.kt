@@ -4,14 +4,8 @@ import com.google.common.collect.Lists
 import me.quantiom.advancedvanish.AdvancedVanish
 import me.quantiom.advancedvanish.config.Config
 import me.quantiom.advancedvanish.hook.impl.ActionBarHook
-import me.quantiom.advancedvanish.hook.impl.DiscordSrvHook
-import me.quantiom.advancedvanish.hook.impl.DynmapHook
-import me.quantiom.advancedvanish.hook.impl.EssentialsHook
-import me.quantiom.advancedvanish.hook.impl.LibsDisguisesHook
 import me.quantiom.advancedvanish.hook.impl.PlaceHolderApiHook
-import me.quantiom.advancedvanish.hook.impl.PlayerParticlesHook
 import me.quantiom.advancedvanish.hook.impl.ServerListHook
-import me.quantiom.advancedvanish.hook.impl.SquaremapHook
 import org.bukkit.Bukkit
 import org.bukkit.event.HandlerList
 import java.util.logging.Level
@@ -22,14 +16,8 @@ object HooksManager {
     @Suppress("UNCHECKED_CAST")
     fun setupHooks() {
         this.addHook("server-list", "ProtocolLib", "Server List", ::ServerListHook)
-        this.addHook("essentials", "Essentials", "Essentials", ::EssentialsHook)
         this.addHook("placeholders", "PlaceholderAPI", "Placeholders", ::PlaceHolderApiHook)
         this.addHook("actionbar", "ActionBarAPI", "Action Bar", ::ActionBarHook)
-        this.addHook("discordsrv", "DiscordSRV", "DiscordSRV", ::DiscordSrvHook)
-        this.addHook("dynmap", "Dynmap", "Dynmap", ::DynmapHook)
-        this.addHook("squaremap", "squaremap", "squaremap", ::SquaremapHook)
-        this.addHook("libsdisguises", "LibsDisguises", "LibsDisguises", ::LibsDisguisesHook)
-        this.addHook("playerparticles", "PlayerParticles", "PlayerParticles", ::PlayerParticlesHook)
 
         this.hooks.forEach {
             Bukkit.getServer().pluginManager.registerEvents(it, AdvancedVanish.instance!!)

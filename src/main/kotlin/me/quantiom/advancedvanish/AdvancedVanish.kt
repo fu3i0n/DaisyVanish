@@ -7,7 +7,6 @@ import me.quantiom.advancedvanish.hook.HooksManager
 import me.quantiom.advancedvanish.listener.VanishListener
 import me.quantiom.advancedvanish.permission.PermissionsManager
 import me.quantiom.advancedvanish.state.VanishStateManager
-import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.util.AdvancedVanishAPI
 import me.quantiom.advancedvanish.util.UpdateChecker
 import org.bukkit.Bukkit
@@ -44,8 +43,6 @@ object AdvancedVanish {
                 }
             }
         }
-
-        plugin.server.pluginManager.registerEvents(ServerSyncManager, plugin)
         plugin.server.pluginManager.registerEvents(VanishListener, plugin)
 
         PermissionsManager.setupPermissionsHandler()
@@ -53,7 +50,6 @@ object AdvancedVanish {
     }
 
     fun onDisable() {
-        ServerSyncManager.close()
         VanishStateManager.onDisable()
         AdvancedVanishAPI.vanishedPlayers.map(Bukkit::getPlayer).forEach { AdvancedVanishAPI.unVanishPlayer(it!!) }
         HooksManager.disableHooks()

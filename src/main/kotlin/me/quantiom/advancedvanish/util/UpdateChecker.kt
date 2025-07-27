@@ -2,7 +2,8 @@ package me.quantiom.advancedvanish.util
 
 import me.quantiom.advancedvanish.AdvancedVanish
 import org.bukkit.Bukkit
-import org.json.JSONObject
+import org.json.simple.JSONObject
+import org.json.simple.parser.JSONParser
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -23,14 +24,15 @@ object UpdateChecker {
                     val connection = url.openConnection() as HttpURLConnection
                     connection.requestMethod = "GET"
                     connection.connect()
-
                     val responseCode = connection.responseCode
+
                     if (responseCode == 200) {
                         connection.inputStream.use { inputStream ->
                             Scanner(inputStream).use { scanner ->
                                 val response = scanner.useDelimiter("\\A").next()
-                                val json = JSONObject(response)
-                                val latestVersion = json.getString("tag_name")
+                                val parser = JSONParser()
+                                val json = parser.parse(response) as JSONObject
+                                val latestVersion = json["tag_name"] as String
                                 consumer.accept(latestVersion)
                                 checkForUpdate(latestVersion)
                             }
@@ -47,6 +49,7 @@ object UpdateChecker {
 
     private fun checkForUpdate(latestVersion: String) {
         val currentVersion = AdvancedVanish.instance?.description?.version ?: return
+
         if (isUpdateAvailable(currentVersion, latestVersion)) {
             AdvancedVanish.instance!!.logger.info("Update available! Current version: $currentVersion, Latest version: $latestVersion")
         } else {
@@ -65,8 +68,8 @@ object UpdateChecker {
     ): Int {
         val versionParts1 = version1.split(".").map { it.toInt() }
         val versionParts2 = version2.split(".").map { it.toInt() }
-
         val maxLength = maxOf(versionParts1.size, versionParts2.size)
+
         for (i in 0 until maxLength) {
             val part1 = versionParts1.getOrElse(i) { 0 }
             val part2 = versionParts2.getOrElse(i) { 0 }

@@ -7,7 +7,6 @@ import com.google.common.collect.Maps
 import com.google.common.io.Closeables
 import me.quantiom.advancedvanish.AdvancedVanish
 import me.quantiom.advancedvanish.state.VanishStateManager
-import me.quantiom.advancedvanish.sync.ServerSyncManager
 import me.quantiom.advancedvanish.util.applyPlaceholders
 import me.quantiom.advancedvanish.util.color
 import me.quantiom.advancedvanish.util.colorLegacy
@@ -38,14 +37,28 @@ object Config {
 
         try {
             inputStream = resource?.buffered()
-            p.load(inputStream)
+            if (inputStream != null) {
+                p.load(inputStream)
+                val versionProperty = p.getProperty("application.config.version")
+                configVersion = versionProperty?.toIntOrNull() ?: 11 // Default to 11 if property is missing or invalid
+            } else {
+                AdvancedVanish.instance!!.logger.warning("app.properties file not found, using default config version 11")
+                configVersion = 11 // Default fallback
+            }
         } catch (e: IOException) {
-            e.printStackTrace()
-            AdvancedVanish.instance!!.logger.log(Level.SEVERE, "Unable to read app.properties! Shutting down...")
-            AdvancedVanish.instance!!.pluginLoader.disablePlugin(AdvancedVanish.instance!!)
+            AdvancedVanish.instance!!.logger.log(
+                Level.WARNING,
+                "Unable to read app.properties, using default config version 11: ${e.message}",
+            )
+            configVersion = 11 // Default fallback
+        } catch (e: NumberFormatException) {
+            AdvancedVanish.instance!!.logger.log(
+                Level.WARNING,
+                "Invalid config version format in app.properties, using default config version 11: ${e.message}",
+            )
+            configVersion = 11 // Default fallback
         } finally {
             Closeables.closeQuietly(inputStream)
-            configVersion = p.getProperty("application.config.version").toInt()
         }
     }
 
@@ -108,7 +121,6 @@ object Config {
 
         this.reloadMessages()
         this.reloadCommandHandlerMessages()
-        ServerSyncManager.setup()
         VanishStateManager.onConfigReload()
         this.usingPriorities = this.getValueOrDefault("priority.enable", false)
     }
@@ -245,7 +257,7 @@ object Config {
         }
 
         val prefix =
-            if (this.savedConfig?.getConfigurationSection("command-handler-messages")?.getBoolean("use-prefix")!!) {
+            if (this.savedConfig?.getConfigurationSection("command-handler-messages")?.getBoolean("use-prefix") == true) {
                 this.getValueOrDefault("messages.prefix.value", "<red>[AdvancedVanish]<white> ")
             } else {
                 ""
@@ -257,6 +269,7 @@ object Config {
 
         val messages: MutableMap<MessageKeyProvider, String> = Maps.newHashMap()
 
+        // Core command messages
         messages[MessageKeys.UNKNOWN_COMMAND] =
             getOrDefault("unknown-command", "Invalid arguments.")
                 .color()
@@ -285,6 +298,21 @@ object Config {
             getOrDefault("generic-error", "Error: <red>%error%")
                 .applyPlaceholders("%error%" to "{message}")
                 .color()
+                .colorLegacy()
+
+        // Add missing ACF help system messages
+        messages[MessageKeys.HELP_HEADER] =
+            getOrDefault("help-header", "<gradient:#8e44ad:#3498db>=== AdvancedVanish Help ===</gradient>")
+                .color()
+                .colorLegacy()
+
+        messages[MessageKeys.HELP_FORMAT] =
+            getOrDefault("help-format", "<yellow>{command}</yellow> <gray>{parameters}</gray> - <white>{description}</white>")
+                .applyPlaceholders(
+                    "{command}" to "{command}",
+                    "{parameters}" to "{parameters}",
+                    "{description}" to "{description}",
+                ).color()
                 .colorLegacy()
 
         AdvancedVanish.commandManager!!.locales.addMessages(Locales.ENGLISH, messages)

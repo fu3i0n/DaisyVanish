@@ -24,94 +24,62 @@ object AdvancedVanishAPI {
     val vanishedPlayers: MutableList<UUID> = Lists.newArrayList()
     private val storedPotionEffects: MutableMap<UUID, List<PotionEffect>> = Maps.newHashMap()
 
-    /**
-     * Vanishes a player if the PrePlayerVanishEvent
-     * does not get cancelled.
-     *
-     * @param player The player to vanish
-     * @param onJoin If this is being called from the PlayerJoinEvent, used for hook/fake join and leave message functionality
-     */
     fun vanishPlayer(
         player: Player,
         onJoin: Boolean = false,
     ) {
-        val prePlayerVanishEvent = PrePlayerVanishEvent(player, onJoin)
-        Bukkit.getPluginManager().callEvent(prePlayerVanishEvent)
+        val preEvent = PrePlayerVanishEvent(player, onJoin)
+        Bukkit.getPluginManager().callEvent(preEvent)
+        if (preEvent.isCancelled) return
 
-        if (prePlayerVanishEvent.isCancelled) return
-
-        this.vanishedPlayers.add(player.uniqueId)
-
-        // add vanished metadata to player for other plugins to use
+        vanishedPlayers.add(player.uniqueId)
         player.setMetadata("vanished", FixedMetadataValue(AdvancedVanish.instance!!, true))
 
         val previousEffects: MutableList<PotionEffect> = Lists.newArrayList()
-
-        // add potion effects
         Config
             .getValueOrDefault("when-vanished.give-potion-effects", Lists.newArrayList<String>())
             .map { it.split(":") }
             .filter { it.size > 1 }
             .forEach {
-                PotionEffectType.values().find { e -> e?.name == it[0] }?.run {
-                    val currentPotionEffect = player.activePotionEffects.find { e -> e.type == this }
+                val type = PotionEffectType.values().find { e -> e?.name == it[0] } ?: return@forEach
+                val current = player.activePotionEffects.find { e -> e.type == type }
+                if (current != null) {
+                    previousEffects.add(current)
+                } else {
+                    previousEffects.add(type.createEffect(0, 0))
+                }
 
-                    if (currentPotionEffect != null) {
-                        previousEffects.add(currentPotionEffect)
-                    } else {
-                        previousEffects.add(this.createEffect(0, 0))
-                    }
+                val duration = if (Bukkit.getVersion().contains("1.19.4") || Bukkit.getVersion().contains(" 1.2")) -1 else Int.MAX_VALUE
+                val amplifier = it[1].toInt() - 1
 
-                    // Check server ver for impl of infinite duration (1.19.4+)
-                    val duration =
-                        if (Bukkit.getVersion().contains("1.19.4") || Bukkit.getVersion().contains(" 1.2")) {
-                            -1
-                        } else {
-                            Integer.MAX_VALUE
-                        }
-
-                    if (onJoin) {
-                        Bukkit.getScheduler().runTaskLater(
-                            AdvancedVanish.instance!!,
-                            Runnable {
-                                player.addPotionEffect(this.createEffect(duration, it[1].toInt() - 1))
-                            },
-                            10L,
-                        )
-                    } else {
-                        player.addPotionEffect(this.createEffect(duration, it[1].toInt() - 1))
-                    }
+                if (onJoin) {
+                    Bukkit.getScheduler().runTaskLater(
+                        AdvancedVanish.instance!!,
+                        Runnable { player.addPotionEffect(type.createEffect(duration, amplifier)) },
+                        10L,
+                    )
+                } else {
+                    player.addPotionEffect(type.createEffect(duration, amplifier))
                 }
             }
 
         if (previousEffects.isNotEmpty()) {
-            this.storedPotionEffects[player.uniqueId] = previousEffects
+            storedPotionEffects[player.uniqueId] = previousEffects
         }
 
         val usePriority = Config.usingPriorities && PermissionsManager.handler != null
-        val playerPriority = PermissionsManager.handler?.getVanishPriority(player)
+        val playerPriority = if (usePriority) PermissionsManager.handler?.getVanishPriority(player) else null
 
-        Bukkit
-            .getOnlinePlayers()
-            .filter { it.uniqueId != player.uniqueId }
-            .forEach {
-                if (usePriority &&
-                    it.hasPermission(
-                        Config.getValueOrDefault(
-                            "permissions.vanish",
-                            "advancedvanish.vanish",
-                        ),
-                    )
-                ) {
-                    val pPriority = PermissionsManager.handler!!.getVanishPriority(it)
-
-                    if (pPriority < playerPriority!!) {
-                        it.hidePlayer(player)
-                    }
-                } else {
+        Bukkit.getOnlinePlayers().filter { it.uniqueId != player.uniqueId }.forEach {
+            if (usePriority && it.hasPermission(Config.getValueOrDefault("permissions.vanish", "advancedvanish.vanish"))) {
+                val pPriority = PermissionsManager.handler?.getVanishPriority(it) ?: 0
+                if (playerPriority != null && pPriority < playerPriority) {
                     it.hidePlayer(player)
                 }
+            } else {
+                it.hidePlayer(player)
             }
+        }
 
         if (!onJoin && Config.getValueOrDefault("join-leave-messages.fake-leave-message-on-vanish.enable", false)) {
             val message =
@@ -119,10 +87,8 @@ object AdvancedVanishAPI {
                     .getValueOrDefault(
                         "join-leave-messages.fake-leave-message-on-vanish.message",
                         "<yellow>%player-name% has left the game.",
-                    ).applyPlaceholders(
-                        "%player-name%" to player.name,
-                    ).color()
-
+                    ).applyPlaceholders("%player-name%" to player.name)
+                    .color()
             Bukkit.getOnlinePlayers().forEach { it.sendComponentMessage(message) }
         }
 
@@ -133,56 +99,28 @@ object AdvancedVanishAPI {
         Bukkit.getPluginManager().callEvent(PlayerVanishEvent(player, onJoin))
     }
 
-    /**
-     * Vanishes a player if the PrePlayerUnVanishEvent
-     * does not get cancelled.
-     *
-     * @param player The player to unvanish
-     * @param onLeave If this is being called from the PlayerQuitEvent, used for hook/fake join and leave message functionality
-     */
     fun unVanishPlayer(
         player: Player,
         onLeave: Boolean = false,
     ) {
-        val prePlayerUnVanishEvent = PrePlayerUnVanishEvent(player, onLeave)
-        Bukkit.getPluginManager().callEvent(prePlayerUnVanishEvent)
+        val preEvent = PrePlayerUnVanishEvent(player, onLeave)
+        Bukkit.getPluginManager().callEvent(preEvent)
+        if (preEvent.isCancelled) return
 
-        if (prePlayerUnVanishEvent.isCancelled) return
-
-        this.vanishedPlayers.remove(player.uniqueId)
-
-        // remove vanished metadata from player
+        vanishedPlayers.remove(player.uniqueId)
         player.removeMetadata("vanished", AdvancedVanish.instance!!)
-
         VanishStateManager.interactEnabled.remove(player.uniqueId)
 
-        this.storedPotionEffects[player.uniqueId]?.let {
-            for (potionEffect in it) {
-                player.removePotionEffect(potionEffect.type)
-
-                if (potionEffect.duration != 0) {
-                    player.addPotionEffect(potionEffect)
-                }
-            }
-
-            this.storedPotionEffects.remove(player.uniqueId)
+        storedPotionEffects.remove(player.uniqueId)?.forEach { effect ->
+            player.removePotionEffect(effect.type)
+            if (effect.duration != 0) player.addPotionEffect(effect)
         }
 
-        Bukkit
-            .getOnlinePlayers()
-            .forEach {
-                it.showPlayer(player)
-            }
+        Bukkit.getOnlinePlayers().forEach { it.showPlayer(player) }
 
-        // ignore if they are in spectator mode (allowed to fly by default)
         if (player.gameMode != GameMode.SPECTATOR &&
-            !player.hasPermission(
-                Config.getValueOrDefault(
-                    "permissions.keep-fly-on-unvanish",
-                    "advancedvanish.keep-fly",
-                ),
-            ) &&
-            !Config.getValueOrDefault("advancedvanish.fly.keep-on-unvanish", false)
+            !player.hasPermission(Config.getValueOrDefault("permissions.keep-fly-on-unvanish", "advancedvanish.keep-fly")) &&
+            !Config.getValueOrDefault("when-vanished.fly.keep-on-unvanish", false)
         ) {
             player.isFlying = false
             player.allowFlight = false
@@ -194,10 +132,8 @@ object AdvancedVanishAPI {
                     .getValueOrDefault(
                         "join-leave-messages.fake-join-message-on-unvanish.message",
                         "<yellow>%player-name% has joined the game.",
-                    ).applyPlaceholders(
-                        "%player-name%" to player.name,
-                    ).color()
-
+                    ).applyPlaceholders("%player-name%" to player.name)
+                    .color()
             Bukkit.getOnlinePlayers().forEach { it.sendComponentMessage(message) }
         }
 
@@ -205,49 +141,36 @@ object AdvancedVanishAPI {
     }
 
     fun refreshVanished(player: Player) {
-        this.vanishedPlayers.forEach { uuid ->
-            Bukkit.getPlayer(uuid)?.let {
-                if (!this.canSee(player, it)) {
-                    player.hidePlayer(it)
-                }
+        vanishedPlayers.forEach { uuid ->
+            val vanished = Bukkit.getPlayer(uuid) ?: return@forEach
+            if (!canSee(player, vanished)) {
+                player.hidePlayer(vanished)
+            } else {
+                player.showPlayer(vanished)
             }
         }
     }
 
-    /**
-     * Checks if a player is vanished
-     *
-     * @param player The player to check if vanished
-     */
-    fun isPlayerVanished(player: Player): Boolean = this.vanishedPlayers.contains(player.uniqueId)
+    fun isPlayerVanished(player: Player): Boolean = vanishedPlayers.contains(player.uniqueId)
 
-    /**
-     * Returns true if `player` can see `target`
-     *
-     * @param player
-     * @param target
-     */
     fun canSee(
-        player: Player,
-        target: Player,
+        player: Player?,
+        target: Player?,
     ): Boolean {
-        if (!target.isVanished()) return false
+        if (player == null || target == null) return false
+        if (!target.isVanished()) return true
 
-        if (!player.hasPermission(
-                Config.getValueOrDefault(
-                    "permissions.vanish",
-                    "advancedvanish.vanish",
-                ),
-            )
-        ) {
+        if (!player.hasPermission(Config.getValueOrDefault("permissions.vanish", "advancedvanish.vanish"))) {
             return false
         }
 
-        if (!Config.usingPriorities) return true
+        if (!Config.usingPriorities || PermissionsManager.handler == null) {
+            return true
+        }
 
-        return PermissionsManager.handler!!.getVanishPriority(player) >=
-            PermissionsManager.handler!!.getVanishPriority(
-                target,
-            )
+        val playerPriority = PermissionsManager.handler?.getVanishPriority(player) ?: 0
+        val targetPriority = PermissionsManager.handler?.getVanishPriority(target) ?: 0
+
+        return playerPriority >= targetPriority
     }
 }
