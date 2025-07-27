@@ -1,4 +1,4 @@
-# AdvancedVanish
+# AdvancedVanish Fork
 ![license](https://img.shields.io/github/license/quantiom/EventHandler?color=%23b59e28&style=for-the-badge) ![made-with-kotlin](https://img.shields.io/badge/MADE%20WITH-KOTLIN-%23b59e28?style=for-the-badge&logo=java)  ![last-commit](https://img.shields.io/github/last-commit/quantiom/AdvancedVanish?color=%23b59e28&style=for-the-badge)  
 
 AdvancedVanish is a fully customizable and advanced vanish plugin made with Kotlin.  
